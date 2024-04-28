@@ -81,15 +81,15 @@ class LinkedList(Generic[T]):
             data (T): Data to be added to the list.
         """
         new_node: Node[T] = Node(data)
-        current_node: Node[T] = self.__head
 
         # if linked list is empty
-        if not self.__head and self.count == 0:
+        if not self.__head and self.__count == 0:
             self.__head = new_node
             self.__count += 1
             return None
 
         list_index: int = 0
+        current_node: Node[T] = self.__head
         while list_index < self.__count - 1:
             current_node = current_node.next
             list_index += 1
@@ -218,9 +218,9 @@ if __name__ == "__main__":
     print(f"Remove from beginning: {l.remove_from_beginning()}")
     print(f"Remove from end: {l.remove_from_end()}")
 
+    l.append(3)
     l.prepend(1)
     l.prepend(2)
-    l.append(3)
     l.prepend(4)
     l.append(5)
     l.append(6)
