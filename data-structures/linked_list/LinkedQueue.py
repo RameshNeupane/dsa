@@ -92,3 +92,36 @@ if __name__ == "__main__":
 
     lq.enqueue(77)
     print(f"First item: {lq.first()}")
+
+    ###########################################################################
+
+    # -------------------------------OUTPUT------------------------------------
+
+    # None
+    # Count: 0
+    # Capacity: 5
+
+    # Length: 0
+    # Is empty? True
+
+    # 11 -> None
+    # Count: 1
+    # Capacity: 5
+
+    # Length: 1
+
+    # Dequeue: 11
+    # Queue is empty
+    # Dequeue: None
+    # None
+    # Count: 0
+    # Capacity: 5
+
+    # 22 -> 33 -> 44 -> 55 -> 66 -> None
+    # Count: 5
+    # Capacity: 5
+
+    # Queue is full
+    # First item: 22
+
+    ###########################################################################

@@ -248,3 +248,50 @@ if __name__ == "__main__":
 
     print(f"Is empty?: {l.is_empty()}")
     print(f"Head: {l.head()}")
+
+    ###########################################################################
+
+    # -------------------------------OUTPUT------------------------------------
+
+    # None
+    # Count: 0
+
+    # Is empty?: True
+    # Head: None
+    # Remove from beginning: None
+    # Remove from end: None
+    # 4 -> 2 -> 1 -> 3 -> 5 -> 6 -> None
+    # Count: 6
+
+    # Remove from beginning: 4
+    # 2 -> 1 -> 3 -> 5 -> 6 -> None
+    # Count: 5
+
+    # Index: 23 is out of range.
+
+    # Index: 6 is out of range.
+
+    # 2 -> 1 -> 8 -> 3 -> 5 -> 6 -> None
+    # Count: 6
+
+    # Remove from end: 6
+    # 2 -> 1 -> 8 -> 3 -> 5 -> None
+    # Count: 5
+
+    # Remove from index 2: 8
+    # 2 -> 1 -> 3 -> 5 -> None
+    # Count: 4
+
+    # Remove from index 0: 2
+    # 1 -> 3 -> 5 -> None
+    # Count: 3
+
+    # Index: 4 is out of range.
+    # Remove from index 4: None
+    # 1 -> 3 -> 5 -> None
+    # Count: 3
+
+    # Is empty?: False
+    # Head: 1
+
+    ###########################################################################
