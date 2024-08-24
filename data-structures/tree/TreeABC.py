@@ -67,3 +67,18 @@ class TreeABC(ABC):
     def is_empty(self) -> bool:
         """Return True if the tree is empty."""
         return len(self) == 0
+
+    # -------------private method---------------------------
+    def _height(self, p: _Position) -> int:
+        """Return the height of the tree rooted at Position p."""
+        if self.is_leaf(p):
+            return 0
+        else:
+            return 1 + max(self.height(child) for child in self.children(p))
+
+    def _depth(self, p: _Position) -> int:
+        """Return the depth of Position p in the tree."""
+        if self.is_root(p):
+            return 0
+        else:
+            return 1 + self._depth(self.parent(p))
