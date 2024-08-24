@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Iterator, Optional
 
 
-class BinaryTreeABC(TreeABC):
+class BinaryTreeABC(TreeABC, ABC):
     """Abstract base class for binary tree data structure."""
 
     ##########################################
