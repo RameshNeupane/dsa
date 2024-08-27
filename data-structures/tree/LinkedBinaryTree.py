@@ -1,13 +1,13 @@
 from BinaryTreeABC import BinaryTreeABC
-from typing import Any, TypeVar, Optional, Union, List
+from typing import TypeVar, Optional, Union, List, Generic
 
 T = TypeVar("T")
 
 
-class LinkedBinaryTree[T](BinaryTreeABC):
+class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
     """Linked binary tree implementation."""
 
-    class _Node[T]:
+    class _Node(Generic[T]):
         """Node class for storing storing element."""
 
         __slots__ = "_parent", "_element", "_left", "_right"
@@ -184,7 +184,8 @@ class LinkedBinaryTree[T](BinaryTreeABC):
         """Return a string representation of the tree."""
         if not self._root:
             return ""
-        rep = self._repr(self._root, level, "Root")
+        rep = f"Info: Root => Root node, L => Left child, R => Right child\n"
+        rep += self._repr(self._root, level, "Root")
         return rep
 
     def __len__(self) -> int:
