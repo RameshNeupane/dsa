@@ -1,5 +1,9 @@
-from LinkedList import LinkedList
+import os
+import sys
 from typing import TypeVar, Generic
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from linked_list.LinkedList import LinkedList
 
 T = TypeVar("T")
 
