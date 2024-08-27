@@ -1,5 +1,10 @@
-from BinaryTreeABC import BinaryTreeABC
 from typing import TypeVar, Optional, Union, List, Generic
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from linked_list.LinkedQueue import LinkedQueue
+from tree.BinaryTreeABC import BinaryTreeABC
 
 T = TypeVar("T")
 
@@ -185,9 +190,9 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             rep += _repr(node._right, level + 1, "R")
             return rep
 
-        rep = f"Info: Root => Root node, L => Left child, R => Right child\n"
-        rep += _repr(self._root, level, "Root")
-        return rep
+        info_str = f"Info: Root => Root node, L => Left child, R => Right child\n"
+        rep = _repr(self._root, level, "Root")
+        return info_str + rep
 
     def __len__(self) -> int:
         """Return the number of elements in the tree."""
@@ -280,7 +285,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
     ###########################################################################
 
     # 1. Inorder Traversal
-    def inorder_traversal(self, root: _Position) -> list[T]:
+    def inorder_traversal(self, root: _Position) -> Union[list[T], None]:
         """Return a list of values of the nodes in the tree in inorder traversal order.
 
         In an Inorder Traversal, the nodes are visited in the following order:
@@ -297,8 +302,9 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
                     Inorder(root.right)     # Traverse the right subtree
         """
         result: list[T] = []
-        if not isinstance(root, self._Position):
-            raise TypeError("root must be position of binary tree root node.")
+        root_node = self._validate(root)
+        if root_node is None:
+            return None
 
         # inorder traverse recursive approach
         def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
@@ -312,7 +318,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         return result
 
     # 2. Preorder Traversal
-    def preorder_traversal(self, root: _Position) -> list[T]:
+    def preorder_traversal(self, root: _Position) -> Union[list[T], None]:
         """Return a list of values of the nodes in the tree in preorder traversal order.
 
         In a preorder traversal, the nodes are visited in the following order:
@@ -329,8 +335,9 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
                     Preorder(root.right)  # traverse right subtree
         """
         result: List[T] = []
-        if not isinstance(root, self._Position):
-            raise TypeError("root must be position of binary tree root node.")
+        root_node = self._validate(root)
+        if root_node is None:
+            return None
 
         # preorder traverse recursive approach
         def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
@@ -344,7 +351,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         return result
 
     # 3. Postorder Traversal
-    def postorder_traversal(self, root: _Position) -> list[T]:
+    def postorder_traversal(self, root: _Position) -> Union[list[T], None]:
         """Return a list of values of the nodes in the tree in postorder traversal order.
 
         In a postorder traversal, the nodes are visited in the following order:
@@ -361,8 +368,9 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
                     Visit(root)             # visit root node
         """
         result: list[T] = []
-        if not isinstance(root, self._Position):
-            raise TypeError("root must be position of binary tree root node.")
+        root_node = self._validate(root)
+        if root_node is None:
+            return None
 
         # postorder traverse recursive approach
         def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
@@ -373,6 +381,57 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             result.append(node._element)  # visit root node
 
         traverse(root._node)
+        return result
+
+    ###########################################################################
+    #
+    # -----------------------2. Breadth First Traversal Methods-----------------
+    #
+    ###########################################################################
+
+    # Lever Order Traversal
+    def levelorder_traversal(
+        self, root: _Position, tree_size: int
+    ) -> Union[list[T], None]:
+        """Return a list of values of the nodes in the tree in level order traversal order.
+
+        Level Order Traversal is the most common form of Breadth-First Traversal applied
+        to trees. In Level Order Traversal, the nodes of the tree are visited level by
+        level, starting from the root and moving downwards, visiting all nodes at each level
+        from left to right.
+
+        Algorithm:
+            LevelOrder(root):
+                if root is null:
+                    return
+
+                queue = empty queue
+                queue.enqueue(root)
+
+                while queue is not empty:
+                    node = queue.dequeue()  # Dequeue the front node
+                    Visit(node)             # Visit the node
+
+                    if node.left is not null:
+                        queue.enqueue(node.left)   # Enqueue left child
+                    if node.right is not null:
+                        queue.enqueue(node.right)  # Enqueue right child
+        """
+        result: list[T] = []
+        root_node = self._validate(root)
+        if root_node is None:
+            return None
+
+        queue = LinkedQueue[LinkedBinaryTree._Node](capacity=tree_size)
+        queue.enqueue(root_node)
+        while not queue.is_empty():
+            node = queue.dequeue()
+            result.append(node._element)
+
+            if node._left is not None:
+                queue.enqueue(node._left)
+            if node._right is not None:
+                queue.enqueue(node._right)
         return result
 
 
@@ -412,6 +471,7 @@ if __name__ == "__main__":
     print(f"Replace c with k: {tree.replace(c, 'k')}\n")
 
     print(tree)
+    tree.replace(c, "c")
 
     print(f"Height of node a: {tree.height(a)}")
     print(f"Height of node d: {tree.height(d)}")
@@ -421,9 +481,12 @@ if __name__ == "__main__":
     print(f"Depth of node d: {tree.depth(d)}")
     print(f"Depth of node h: {tree.depth(h)}\n")
 
+    print(tree)
+
     print(f"Inorder traversal: {tree.inorder_traversal(tree.root())}")
     print(f"Preorder traversal: {tree.preorder_traversal(tree.root())}")
     print(f"Postorder traversal: {tree.postorder_traversal(tree.root())}")
+    print(f"Lever Order traversal: {tree.levelorder_traversal(tree.root(), len(tree))}")
 
     ####################################################################
     # ------------------------OUTPUT-------------------------------------
@@ -431,8 +494,10 @@ if __name__ == "__main__":
 
     # Root: a
 
+    # Info: Root => Root node, L => Left child, R => Right child
     # Root(a)
 
+    # Info: Root => Root node, L => Left child, R => Right child
     # Root(a)
     #     |___L(b)
     #         |___L(d)
@@ -456,6 +521,7 @@ if __name__ == "__main__":
     # Number of children of node f: 0
     # Replace c with k: c
 
+    # Info: Root => Root node, L => Left child, R => Right child
     # Root(a)
     #     |___L(b)
     #         |___L(d)
@@ -474,8 +540,20 @@ if __name__ == "__main__":
     # Depth of node d: 2
     # Depth of node h: 3
 
-    # Inorder traversal: ['d', 'b', 'h', 'e', 'a', 'f', 'k', 'g', 'i']
-    # Preorder traversal: ['a', 'b', 'd', 'e', 'h', 'k', 'f', 'g', 'i']
-    # Postorder traversal: ['d', 'h', 'e', 'b', 'f', 'i', 'g', 'k', 'a']
+    # Info: Root => Root node, L => Left child, R => Right child
+    # Root(a)
+    #     |___L(b)
+    #         |___L(d)
+    #         |___R(e)
+    #             |___L(h)
+    #     |___R(c)
+    #         |___L(f)
+    #         |___R(g)
+    #             |___R(i)
+
+    # Inorder traversal: ['d', 'b', 'h', 'e', 'a', 'f', 'c', 'g', 'i']
+    # Preorder traversal: ['a', 'b', 'd', 'e', 'h', 'c', 'f', 'g', 'i']
+    # Postorder traversal: ['d', 'h', 'e', 'b', 'f', 'i', 'g', 'c', 'a']
+    # Lever Order traversal: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
 
     ####################################################################
