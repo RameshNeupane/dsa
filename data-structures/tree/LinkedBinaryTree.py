@@ -170,22 +170,23 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             t2._root = None
             t2._size = 0
 
-    def _repr(self, node: _Node, level: int, tag: str) -> str:
-        if node is None:
-            return ""
-        rep = f"{'    ' * level}{'|___' if node is not self._root else ''}{tag}({node._element})\n"
-        rep += self._repr(node._left, level + 1, "L")
-        rep += self._repr(node._right, level + 1, "R")
-        return rep
-
     # -----------public methos-----------------------
 
     def __repr__(self, level=0) -> str:
         """Return a string representation of the tree."""
         if not self._root:
             return ""
+
+        def _repr(node: LinkedBinaryTree._Node, level: int, tag: str) -> str:
+            if node is None:
+                return ""
+            rep = f"{'    ' * level}{'|___' if node is not self._root else ''}{tag}({node._element})\n"
+            rep += _repr(node._left, level + 1, "L")
+            rep += _repr(node._right, level + 1, "R")
+            return rep
+
         rep = f"Info: Root => Root node, L => Left child, R => Right child\n"
-        rep += self._repr(self._root, level, "Root")
+        rep += _repr(self._root, level, "Root")
         return rep
 
     def __len__(self) -> int:
