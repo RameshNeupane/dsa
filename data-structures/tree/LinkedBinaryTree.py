@@ -267,6 +267,114 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         """
         return self._attach(p, t1, t2)
 
+    ###########################################################################
+    #
+    # -----------------------Binary Tree Traversal Methods---------------------
+    #
+    ###########################################################################
+
+    ###########################################################################
+    #
+    # -----------------------1. Depth First Traversal Methods-----------------
+    #
+    ###########################################################################
+
+    # 1. Inorder Traversal
+    def inorder_traversal(self, root: _Position) -> list[T]:
+        """Return a list of values of the nodes in the tree in inorder traversal order.
+
+        In an Inorder Traversal, the nodes are visited in the following order:
+            1. Left subtree (L)
+            2. Root node (N)
+            3. Right subtree (R)
+            i.e. Order => L -> N -> R
+
+        Recursive approach:
+            Inorder(root):
+                if root is not null:
+                    Inorder(root.left)      # Traverse the left subtree
+                    Visit(root)             # Visit the root node
+                    Inorder(root.right)     # Traverse the right subtree
+        """
+        result: list[T] = []
+        if not isinstance(root, self._Position):
+            raise TypeError("root must be position of binary tree root node.")
+
+        # inorder traverse recursive approach
+        def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
+            if node is None:
+                return
+            traverse(node._left)
+            result.append(node._element)
+            traverse(node._right)
+
+        traverse(root._node)
+        return result
+
+    # 2. Preorder Traversal
+    def preorder_traversal(self, root: _Position) -> list[T]:
+        """Return a list of values of the nodes in the tree in preorder traversal order.
+
+        In a preorder traversal, the nodes are visited in the following order:
+            1. Root node (N)
+            2. Left subtree (L)
+            3. Right subtree (R)
+            i.e. Order => N -> L -> R
+
+        Recursive approach:
+            Preorder(root):
+                if root is not null:
+                    Visit(root)           # visit root node
+                    Preorder(root.left)   # traverse left subtree
+                    Preorder(root.right)  # traverse right subtree
+        """
+        result: List[T] = []
+        if not isinstance(root, self._Position):
+            raise TypeError("root must be position of binary tree root node.")
+
+        # preorder traverse recursive approach
+        def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
+            if node is None:
+                return
+            result.append(node._element)  # visit root node
+            traverse(node._left)  # traverse left subtree
+            traverse(node._right)  # traverse right subtree
+
+        traverse(root._node)
+        return result
+
+    # 3. Postorder Traversal
+    def postorder_traversal(self, root: _Position) -> list[T]:
+        """Return a list of values of the nodes in the tree in postorder traversal order.
+
+        In a postorder traversal, the nodes are visited in the following order:
+            1. Left subtree (L)
+            2. Right subtree (R)
+            3. Root node (N)
+            i.e. Order => L -> R -> N
+
+        Recursive approach:
+            Postorder(root):
+                if root is not null:
+                    Postorder(root.left)    # traverse left subtree
+                    Postorder(root.right)   # traverse right subtree
+                    Visit(root)             # visit root node
+        """
+        result: list[T] = []
+        if not isinstance(root, self._Position):
+            raise TypeError("root must be position of binary tree root node.")
+
+        # postorder traverse recursive approach
+        def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
+            if node is None:
+                return
+            traverse(node._left)  # traverse left subtree
+            traverse(node._right)  # traverse right subtree
+            result.append(node._element)  # visit root node
+
+        traverse(root._node)
+        return result
+
 
 if __name__ == "__main__":
     # Test the LinkedBinaryTree class
@@ -312,6 +420,10 @@ if __name__ == "__main__":
     print(f"Depth of node a: {tree.depth(a)}")
     print(f"Depth of node d: {tree.depth(d)}")
     print(f"Depth of node h: {tree.depth(h)}\n")
+
+    print(f"Inorder traversal: {tree.inorder_traversal(tree.root())}")
+    print(f"Preorder traversal: {tree.preorder_traversal(tree.root())}")
+    print(f"Postorder traversal: {tree.postorder_traversal(tree.root())}")
 
     ####################################################################
     # ------------------------OUTPUT-------------------------------------
@@ -361,5 +473,9 @@ if __name__ == "__main__":
     # Depth of node a: 0
     # Depth of node d: 2
     # Depth of node h: 3
+
+    # Inorder traversal: ['d', 'b', 'h', 'e', 'a', 'f', 'k', 'g', 'i']
+    # Preorder traversal: ['a', 'b', 'd', 'e', 'h', 'k', 'f', 'g', 'i']
+    # Postorder traversal: ['d', 'h', 'e', 'b', 'f', 'i', 'g', 'k', 'a']
 
     ####################################################################
