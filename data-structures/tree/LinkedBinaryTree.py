@@ -114,6 +114,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         # if the tree consists of only a root node
         if self._size == 1:
             self._root = None
+            self._size = 0
             return node._element
 
         if self.num_children(p) == 2:
