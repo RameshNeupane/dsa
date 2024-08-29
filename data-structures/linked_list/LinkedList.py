@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Iterator
 
 T = TypeVar("T")
 
@@ -22,6 +22,13 @@ class LinkedList(Generic[T]):
     def __init__(self):
         self.__head: Node[T] | None = None
         self.__count: int = 0
+
+    def __iter__(self) -> Iterator[T]:
+        """Return an iterator over the linked list."""
+        current = self.__head
+        while current is not None:
+            yield current.data
+            current = current.next
 
     def __repr__(self) -> str:
         list_str: str = ""
@@ -211,7 +218,7 @@ class LinkedList(Generic[T]):
 
 
 if __name__ == "__main__":
-    l: LinkedList[T] = LinkedList()
+    l: LinkedList[int] = LinkedList()
     print(l)
     print(f"Is empty?: {l.is_empty()}")
     print(f"Head: {l.head()}")

@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Iterator
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from linked_list.LinkedList import LinkedList
@@ -15,9 +15,16 @@ class LinkedQueue(Generic[T]):
     """
 
     def __init__(self, capacity=10) -> None:
-        self.__queue: LinkedList[T] = LinkedList()
+        self.__queue = LinkedList[T]()
         self.__capacity: int = capacity
         self.__count: int = 0
+    
+    def __iter__(self) -> Iterator[T]:
+        """Return an iterator over the elements of the queue.
+        """
+        for e in self.__queue:
+            yield e
+
 
     def __repr__(self) -> str:
         return self.__queue.__repr__() + f"Capacity: {self.__capacity}\n"
@@ -93,6 +100,9 @@ if __name__ == "__main__":
     lq.enqueue(55)
     lq.enqueue(66)
     print(lq)
+    
+    for e in lq:
+        print(e)
 
     lq.enqueue(77)
     print(f"First item: {lq.first()}")
