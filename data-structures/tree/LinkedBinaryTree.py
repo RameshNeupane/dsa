@@ -286,7 +286,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
     ###########################################################################
 
     # 1. Inorder Traversal
-    def inorder_traversal(self, root: _Position) -> Union[list[T], None]:
+    def inorder_traversal(self, root: _Position) -> list[T]:
         """Return a list of values of the nodes in the tree in inorder traversal order.
 
         In an Inorder Traversal, the nodes are visited in the following order:
@@ -304,8 +304,6 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         """
         result: list[T] = []
         root_node = self._validate(root)
-        if root_node is None:
-            return None
 
         # inorder traverse recursive approach
         def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
@@ -315,11 +313,11 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             result.append(node._element)
             traverse(node._right)
 
-        traverse(root._node)
+        traverse(root_node)
         return result
 
     # 2. Preorder Traversal
-    def preorder_traversal(self, root: _Position) -> Union[list[T], None]:
+    def preorder_traversal(self, root: _Position) -> list[T]:
         """Return a list of values of the nodes in the tree in preorder traversal order.
 
         In a preorder traversal, the nodes are visited in the following order:
@@ -337,8 +335,6 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         """
         result: List[T] = []
         root_node = self._validate(root)
-        if root_node is None:
-            return None
 
         # preorder traverse recursive approach
         def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
@@ -348,11 +344,11 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             traverse(node._left)  # traverse left subtree
             traverse(node._right)  # traverse right subtree
 
-        traverse(root._node)
+        traverse(root_node)
         return result
 
     # 3. Postorder Traversal
-    def postorder_traversal(self, root: _Position) -> Union[list[T], None]:
+    def postorder_traversal(self, root: _Position) -> list[T]:
         """Return a list of values of the nodes in the tree in postorder traversal order.
 
         In a postorder traversal, the nodes are visited in the following order:
@@ -370,8 +366,6 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         """
         result: list[T] = []
         root_node = self._validate(root)
-        if root_node is None:
-            return None
 
         # postorder traverse recursive approach
         def traverse(node: Union[LinkedBinaryTree._Node, None]) -> Union[list[T], None]:
@@ -381,7 +375,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             traverse(node._right)  # traverse right subtree
             result.append(node._element)  # visit root node
 
-        traverse(root._node)
+        traverse(root_node)
         return result
 
     ###########################################################################
@@ -391,9 +385,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
     ###########################################################################
 
     # Lever Order Traversal
-    def levelorder_traversal(
-        self, root: _Position, tree_size: int
-    ) -> Union[list[T], None]:
+    def levelorder_traversal(self, root: _Position, tree_size: int) -> list[T]:
         """Return a list of values of the nodes in the tree in level order traversal order.
 
         Level Order Traversal is the most common form of Breadth-First Traversal applied
@@ -403,11 +395,10 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
 
         Algorithm:
             LevelOrder(root):
-                if root is null:
-                    return
 
                 queue = empty queue
-                queue.enqueue(root)
+                if root is null:
+                    queue.enqueue(root)
 
                 while queue is not empty:
                     node = queue.dequeue()  # Dequeue the front node
@@ -420,11 +411,10 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
         """
         result: list[T] = []
         root_node = self._validate(root)
-        if root_node is None:
-            return None
 
         queue = LinkedQueue[LinkedBinaryTree._Node](capacity=tree_size)
-        queue.enqueue(root_node)
+        if root_node is not None:
+            queue.enqueue(root_node)
         while not queue.is_empty():
             node = queue.dequeue()
             result.append(node._element)
