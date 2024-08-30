@@ -219,3 +219,101 @@ class LinkedTree(TreeABC, Generic[T]):
     def attach(self, p: _Position, t: "LinkedTree") -> None:
         """Attach the tree t to the position p in this tree."""
         return self._attach(p, t)
+
+    ###########################################################################
+    #
+    # -----------------------Binary Tree Traversal Methods---------------------
+    #
+    ###########################################################################
+
+    ###########################################################################
+    #
+    # -----------------------1. Depth First Traversal Methods-----------------
+    #
+    ###########################################################################
+
+    # 1. Preorder Traversal
+    def preorder_traversal(self, root: _Position) -> list[T]:
+        """Return a list of entries in preorder traversal order.
+
+        Algorithm:
+            Preorder(node):
+                if node is not none:
+                    visit(node)
+                    for child in node.children:
+                        Preorder(child)
+        """
+        result: list[T] = []
+        node = self._validate(root)
+
+        def preorder(node: LinkedTree._Node | None) -> None:
+            if node is None:
+                return
+            result.append(node._element)
+            for child in node._children:
+                child = self._validate(child)
+                preorder(child)
+
+        preorder(node)
+        return result
+
+    # 2. Postorder Traversal
+    def postorder_traversal(self, root: _Position) -> list[T]:
+        """Return a list of entries in postorder traversal order.
+
+        Algorithm:
+            Postorder(node):
+                if node is not none:
+                    for child in node.children:
+                        Postorder(child)
+                    visit(node)
+        """
+        result: list[T] = []
+        node = self._validate(root)
+
+        def postorder(node: LinkedTree._Node | None) -> None:
+            if node is None:
+                return
+            for child in node._children:
+                child = self._validate(child)
+                postorder(child)
+            result.append(node._element)
+
+        postorder(node)
+        return result
+
+    ###########################################################################
+    #
+    # -----------------------2. Breadth First Traversal Methods----------------
+    #
+    ###########################################################################
+
+    # Level order traversal
+    def levelorder_traversal(self, root: _Position) -> list[T]:
+        """Return a list of entries in level order traversal order.
+
+        Algorithm:
+            LevelOrder(root):
+                queue = Queue() # empty queue
+                if root is not null:
+                    queue.enqueue(root)
+                while queue is not empty:
+                    node = queue.dequeue()
+                    visit(node)
+                    for child in node.children:
+                        if child is not null:
+                            queue.enqueue(child)
+        """
+        result: list[T] = []
+        node = self._validate(root)
+        queue = LinkedQueue[LinkedTree._Node](capacity=self._size)
+        if node is not None:
+            queue.enqueue(node)
+        while not queue.is_empty():
+            node = queue.dequeue()
+            result.append(node._element)
+            for child in node._children:
+                child = self._validate(child)
+                if child is not None:
+                    queue.enqueue(child)
+        return result
