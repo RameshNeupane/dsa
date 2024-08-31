@@ -1,4 +1,4 @@
-from typing import TypeVar, List, Generic, Iterator
+from typing import TypeVar, List, Generic, Iterator, Union
 import os
 import sys
 
@@ -19,7 +19,7 @@ class LinkedTree(TreeABC, Generic[T]):
 
         __slots__ = "_parent", "_element", "_children"
 
-        def __init__(self, element: T, parent: "LinkedTree._Node" | None) -> None:
+        def __init__(self, element: T, parent: Union["LinkedTree._Node", None]) -> None:
             self._element = element
             self._parent = parent
             self._children = LinkedQueue[LinkedTree._Position](capacity=99)
@@ -112,11 +112,16 @@ class LinkedTree(TreeABC, Generic[T]):
             leftmost_child = node._children.dequeue()
             leftmost_child_node = self._validate(leftmost_child)
             leftmost_child_node._parent = node._parent
+            node._parent._children.enqueue(leftmost_child)
             for child in node._children:
-                child = self._validate(child)
-                child._parent = leftmost_child_node
+                child_node = self._validate(child)
+                child_node._parent = leftmost_child_node
                 leftmost_child_node._children.enqueue(child)
 
+        for idx in range(len(node._parent._children)):
+            if p == node._parent._children[idx]:
+                node._parent._children.remove(idx)
+                break
         node._parent = None
         node._children = None
         self._size -= 1
@@ -159,12 +164,12 @@ class LinkedTree(TreeABC, Generic[T]):
             node = self._validate(p)
             if node is None:
                 return ""
-            rep_str = f"{'    ' * level}{'|___' if node is not self._root else ''}{node._element}\n"
+            rep_str = f"{'    ' * level}{'|___' if node is not self._root else 'Root=>'}{node._element}\n"
             for child in node._children:
                 rep_str += repr(child, level + 1)
             return rep_str
 
-        return repr(self._root, level)
+        return repr(self.root(), level)
 
     def root(self) -> _Position | None:
         """Return the root of this tree (or None if the tree is empty)"""
@@ -317,3 +322,169 @@ class LinkedTree(TreeABC, Generic[T]):
                 if child is not None:
                     queue.enqueue(child)
         return result
+
+
+if __name__ == "__main__":
+    tree = LinkedTree[str]()
+
+    print(f"Is tree empty: {tree.is_empty()}")
+    print(f"Root:  {tree.root().element()if tree.root() else f"No root"}")
+    print(tree)
+    
+    a = tree.add_root('a')
+    print(tree)
+    print(f"Is a node root?: {tree.is_root(a)}\n")
+    
+    b = tree.add_child(a, 'b')
+    c = tree.add_child(a, 'c')
+    d = tree.add_child(a, 'd')
+    e = tree.add_child(b, 'e')
+    f = tree.add_child(b, 'f')
+    g = tree.add_child(b, 'g')
+    h = tree.add_child(c, 'h')
+    i = tree.add_child(d, 'i')
+    j = tree.add_child(d, 'j')
+    k = tree.add_child(e, 'k')
+    l = tree.add_child(f, 'l')
+    m = tree.add_child(g, 'm')
+    n = tree.add_child(h, 'n')
+    o = tree.add_child(i, 'o')
+    p = tree.add_child(j, 'p')
+    q = tree.add_child(k, 'q')
+    r = tree.add_child(k, 'r')
+    s = tree.add_child(l, 's')
+    t = tree.add_child(l, 't')
+    u = tree.add_child(n, 'u')
+    v = tree.add_child(o, 'v')
+    w = tree.add_child(p, 'w')
+    x = tree.add_child(w, 'x')
+    y = tree.add_child(w, 'y')
+    z = tree.add_child(y, 'z')
+    
+    print(tree)
+    
+    print(f"Total number of nodes: {len(tree)}\n")
+
+    print(f"Height of node a: {tree.height(a)}")
+    print(f"Height of node m: {tree.height(m)}")
+    print(f"Height of node w: {tree.height(w)}")
+    print(f"Depth of node a: {tree.depth(a)}")
+    print(f"Depth of node z: {tree.depth(z)}")
+    print(f"Depth of node j: {tree.depth(j)}")
+    
+    print(f"\nIf x leaf node?: {tree.is_leaf(x)}")
+    print(f"Is k leaf node?: {tree.is_leaf(k)}")
+    print(f"Number of children of node b: {tree.num_children(b)}")
+    print(f"Number of children of node v: {tree.num_children(v)}")
+    print(f"Parent of node h: {tree.parent(h).element()}")
+    print(f"Number of children of node b: {[child.element() for child in tree.children(b)]}")
+    print(f"Number of children of node q: {[child.element() for child in tree.children(q)]}")
+    
+    print(f"\nPreorder traversal from node a: {tree.preorder_traversal(a)}")
+    print(f"Preorder traversal from node d: {tree.preorder_traversal(d)}")
+    print(f"Preorder traversal from node u: {tree.preorder_traversal(u)}")
+    
+    print(f"\nPostorder traversal from node a: {tree.postorder_traversal(a)}")
+    print(f"Postorder traversal from node f: {tree.postorder_traversal(f)}")
+    print(f"Postorder traversal from node s: {tree.postorder_traversal(s)}")
+    
+    print(f"\nLever order traversal of node a: {tree.levelorder_traversal(a)}")
+    print(f"Lever order traversal of node j: {tree.levelorder_traversal(j)}")
+    print(f"Lever order traversal of node t: {tree.levelorder_traversal(t)}")
+    
+    print(f"Delete node b: {tree.delete(b)}")
+    print(tree)
+
+    ####################################################################
+    # ------------------------OUTPUT-------------------------------------
+    #
+    # Is tree empty: True
+    # Root:  No root
+
+    # Root=>a
+
+    # Is a node root?: True
+
+    # Root=>a
+    #     |___b
+    #         |___e
+    #             |___k
+    #                 |___q
+    #                 |___r
+    #         |___f
+    #             |___l
+    #                 |___s
+    #                 |___t
+    #         |___g
+    #             |___m
+    #     |___c
+    #         |___h
+    #             |___n
+    #                 |___u
+    #     |___d
+    #         |___i
+    #             |___o
+    #                 |___v
+    #         |___j
+    #             |___p
+    #                 |___w
+    #                     |___x
+    #                     |___y
+    #                         |___z
+
+    # Total number of nodes: 26
+
+    # Height of node a: 6
+    # Height of node m: 0
+    # Height of node w: 2
+    # Depth of node a: 0
+    # Depth of node z: 6
+    # Depth of node j: 2
+
+    # If x leaf node?: True
+    # Is k leaf node?: False
+    # Number of children of node b: 3
+    # Number of children of node v: 0
+    # Parent of node h: c
+    # Number of children of node b: ['e', 'f', 'g']
+    # Number of children of node q: []
+
+    # Preorder traversal from node a: ['a', 'b', 'e', 'k', 'q', 'r', 'f', 'l', 's', 't', 'g', 'm', 'c', 'h', 'n', 'u', 'd', 'i', 'o', 'v', 'j', 'p', 'w', 'x', 'y', 'z']
+    # Preorder traversal from node d: ['d', 'i', 'o', 'v', 'j', 'p', 'w', 'x', 'y', 'z']
+    # Preorder traversal from node u: ['u']
+
+    # Postorder traversal from node a: ['q', 'r', 'k', 'e', 's', 't', 'l', 'f', 'm', 'g', 'b', 'u', 'n', 'h', 'c', 'v', 'o', 'i', 'x', 'z', 'y', 'w', 'p', 'j', 'd', 'a']
+    # Postorder traversal from node f: ['s', 't', 'l', 'f']
+    # Postorder traversal from node s: ['s']
+
+    # Lever order traversal of node a: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    # Lever order traversal of node j: ['j', 'p', 'w', 'x', 'y', 'z']
+    # Lever order traversal of node t: ['t']
+    # Delete node b: b
+    # Root=>a
+    #     |___c
+    #         |___h
+    #             |___n
+    #                 |___u
+    #     |___d
+    #         |___i
+    #             |___o
+    #                 |___v
+    #         |___j
+    #             |___p
+    #                 |___w
+    #                     |___x
+    #                     |___y
+    #                         |___z
+    #     |___e
+    #         |___k
+    #             |___q
+    #             |___r
+    #         |___f
+    #             |___l
+    #                 |___s
+    #                 |___t
+    #         |___g
+    #             |___m
+    #
+    ####################################################################
