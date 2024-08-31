@@ -18,13 +18,17 @@ class LinkedQueue(Generic[T]):
         self.__queue = LinkedList[T]()
         self.__capacity: int = capacity
         self.__count: int = 0
-    
+
     def __iter__(self) -> Iterator[T]:
-        """Return an iterator over the elements of the queue.
-        """
+        """Return an iterator over the elements of the queue."""
         for e in self.__queue:
             yield e
 
+    def __getitem__(self, index: int) -> T:
+        """Return the item at the specified index in the queue."""
+        if index < 0 or index >= self.__count:
+            raise IndexError("Index out of range")
+        return self.__queue.get_at(index)
 
     def __repr__(self) -> str:
         return self.__queue.__repr__() + f"Capacity: {self.__capacity}\n"
@@ -78,6 +82,12 @@ class LinkedQueue(Generic[T]):
 
         return self.__queue.head()
 
+    def remove(self, idx: int) -> T:
+        """Remove and return a item from the queue at the specified index."""
+        if idx < 0 or idx >= self.__count:
+            raise ValueError("Index out of range")
+        return self.__queue.remove_from(idx)
+
 
 if __name__ == "__main__":
     lq: LinkedQueue[int] = LinkedQueue(capacity=5)
@@ -100,7 +110,7 @@ if __name__ == "__main__":
     lq.enqueue(55)
     lq.enqueue(66)
     print(lq)
-    
+
     for e in lq:
         print(e)
 

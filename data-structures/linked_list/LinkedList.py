@@ -23,6 +23,10 @@ class LinkedList(Generic[T]):
         self.__head: Node[T] | None = None
         self.__count: int = 0
 
+    def __len__(self) -> int:
+        """Return the number of elements in the linked list."""
+        return self.__count
+
     def __iter__(self) -> Iterator[T]:
         """Return an iterator over the linked list."""
         current = self.__head
@@ -215,6 +219,15 @@ class LinkedList(Generic[T]):
             del remove_node
             self.__count -= 1
             return remove_node_value
+
+    def get_at(self, index: int) -> T:
+        """Return the item at the specified index in the linked list."""
+        if index < 0 or index >= len(self):
+            raise IndexError("Index out of range")
+        current = self.__head
+        for _ in range(index):
+            current = current.next
+        return current.data
 
 
 if __name__ == "__main__":
