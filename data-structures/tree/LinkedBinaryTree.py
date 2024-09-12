@@ -2,7 +2,9 @@ from typing import TypeVar, Optional, Union, List, Generic
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 from linked_list.LinkedQueue import LinkedQueue
 from tree.BinaryTreeABC import BinaryTreeABC
 
@@ -164,7 +166,7 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
             raise ValueError("p must be position of a leaf node in this tree.")
         if not type(self) is type(t1) is type(t2):
             raise TypeError("Trees must be of same type.")
-        self._size += t1._size + t1._size
+        self._size += t1._size + t2._size
         if not t1.is_empty():
             t1._root._parent = node
             node._left = t1._root
@@ -265,8 +267,8 @@ class LinkedBinaryTree(BinaryTreeABC, Generic[T]):
     def attach(
         self,
         p: _Position,
-        t1: "LinkedBinaryTree._Position",
-        t2: "LinkedBinaryTree._Position",
+        t1: "LinkedBinaryTree",
+        t2: "LinkedBinaryTree",
     ) -> None:
         """Attach t1 and t2 to p, respectively, replacing the node at position p and
         its children. t1 and t2 are trees respectively.
