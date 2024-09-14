@@ -14,7 +14,7 @@ class PositionalList(Generic[T]):
         __size (int): number of nodes in the list
     """
 
-    class _Node:
+    class _Node(Generic[T]):
         """Doubly linked node.
 
         Attributes:
