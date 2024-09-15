@@ -10,30 +10,12 @@ from linked_list.PositionalList import PositionalList
 class UnsortedPriorityQueue(PriorityQueueBase):
     """A min-oriented priority queue implemented with an unsorted list."""
 
-    __slots__ = ("_data",)
-
-    def __init__(self) -> None:
-        """Create an empty priority queue."""
-        self._data = PositionalList["PriorityQueueBase._Item"]()
-
-    def __len__(self) -> int:
-        """Return the number of elements in the priority queue."""
-        return len(self._data)
-
-    def __repr__(self) -> str:
-        """Return a string representation of the priority queue."""
-        repr = "\nheader -><- "
-        for item in self._data:
-            repr += f"({item._key}, {item._value}) -><- "
-        repr += "trailer"
-        return f"{repr}\nsize: {len(self)}"
-
     def enqueue(self, key: int, value: object) -> None:
         """Add a new key-value pair."""
         item = self._Item(key, value)
         self._data.add_last(item)
 
-    def _find_min(self) -> PositionalList._Position:
+    def _find_min(self) -> PositionalList._Position[PriorityQueueBase._Item]:
         """Return Position of current min item (or None if empty)."""
         if self.is_empty():
             raise Exception("Queue is empty.")
@@ -48,7 +30,7 @@ class UnsortedPriorityQueue(PriorityQueueBase):
     def min(self) -> tuple[int, object]:
         """Return but do not remove (key, value) of current min item."""
         p = self._find_min()
-        item: PriorityQueueBase._Item = p.item()
+        item = p.item()
         return (item._key, item._value)
 
     def deqeueue_min(self) -> tuple[int, object]:

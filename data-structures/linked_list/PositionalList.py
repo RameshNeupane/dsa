@@ -30,7 +30,7 @@ class PositionalList(Generic[T]):
             self._prev: PositionalList[T]._Node | None = None
             self._next: PositionalList[T]._Node | None = None
 
-    class _Position:
+    class _Position(Generic[T]):
         """An abstraction representing location of node in the list.
 
         Attributes:
