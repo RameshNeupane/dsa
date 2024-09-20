@@ -1,3 +1,5 @@
+from typing import Iterable
+
 type index = int
 
 
@@ -22,8 +24,18 @@ class HeapPriorityQueue:
         def __lt__(self, other: object) -> bool:
             return type(other) is type(self) and self._key < other._key
 
-    def __init__(self) -> None:
-        self._data: list[HeapPriorityQueue._Item] = []
+    def __init__(self, contents: Iterable[tuple[int, object]] = ()) -> None:
+        self._data: list[HeapPriorityQueue._Item] = [
+            self._Item(k, v) for (k, v) in contents
+        ]
+        if len(self) > 1:
+            self._heapify()
+
+    def _heapify(self) -> None:
+        """Transform a list into a valid heap in-place."""
+        start = self._parent(len(self) - 1)
+        for idx in range(start, -1, -1):
+            self._downheap(idx)
 
     def __len__(self) -> int:
         """Return total number of items in the priority queue."""
